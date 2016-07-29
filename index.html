@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>demo</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <style>
+        body.judo-booted {
+            transition: padding 0.2s;
+        }
+
+        body.judo-booted .judo {
+            transition: transform 0.2s;
+        }
+
+        body.judo-closed {
+            /* this value should be fetched dynamically */
+            padding-top: 20px;
+        }
+
+        body.judo-open {
+            padding-top: 80px;
+        }
+
+        .judo-toggle {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            background-color: inherit;
+            position: absolute;
+            left: 0;
+            bottom: -20px;
+            border-bottom-right-radius: 50%;
+        }
+
+        .judo-toggle:after {
+            content: '';
+            position: absolute;
+            width: 50%;
+            height: 50%;
+            border-radius: 100%;
+            margin: 5px;
+            background-color: #dfdfdf;
+        }
+
+        .judo.open {
+            transform: translateY(0%);
+        }
+
+        .judo {
+            transform: translateY(-100%);
+            /*transition: transform 0.2s;*/
+        }
+
+        .judo .timing .progress {
+            margin: 0;
+            margin-left: 6px;
+        }
+
+        .judo .timing a .progress {
+            opacity: 0.5;
+            width: 200px;
+        }
+
+        .judo .timing p {
+            margin-left: 20px;
+            margin-right: 20px;
+            margin-top: 10px;
+        }
+
+        .judo .timing .dropdown-menu .progress {
+            margin-left: 20px;
+            margin-right: 20px;
+            margin-bottom: 5px;
+        }
+
+        .judo .timing:hover .progress, .judo .timing:focus .progress {
+            opacity: 1;
+        }
+
+        .progress-bar-clear {
+            background-color: transparent;
+            box-shadow: none;
+            -webkit-box-shadow: none;
+        }
+
+        .progress-bar-translucent {
+            opacity: 0.25;
+            box-shadow: none;
+            -webkit-box-shadow: none;
+        }
+
+        .progress.progress-sm {
+            height: 10px;
+        }
+
+        .tooltip-default + .tooltip .tooltip-inner {
+            color: #31708f;
+            background-color: #d9edf7;
+            border-color: #bce8f1;
+            background-image: -webkit-linear-gradient(top, #d9edf7 0%, #b9def0 100%);
+            background-image: linear-gradient(to bottom, #d9edf7 0%, #b9def0 100%);
+            background-repeat: repeat-x;
+            border-color: #9acfea;
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffd9edf7', endColorstr='#ffb9def0', GradientType=0);
+        }
+        .tooltip-default + .tooltip.top .tooltip-arrow,
+        .tooltip-default + .tooltip.top-left .tooltip-arrow,
+        .tooltip-default + .tooltip.top-right .tooltip-arrow {
+            border-top-color: #bce8f1;
+        }
+        .tooltip-default + .tooltip.bottom .tooltip-arrow,
+        .tooltip-default + .tooltip.bottom-left .tooltip-arrow,
+        .tooltip-default + .tooltip.bottom-right .tooltip-arrow {
+            border-bottom-color: #bce8f1;
+        }
+        .tooltip-default + .tooltip.right .tooltip-arrow {
+            border-right-color: #bce8f1;
+        }
+        .tooltip-default + .tooltip.left .tooltip-arrow {
+            border-left-color: #bce8f1;
+        }
+    </style>
+    <script>
+        var Pi=0;
+        var n=1;
+        for (i=0;i<=10000000;i++)
+        {
+            Pi=Pi+(4/n)-(4/(n+2))
+            n=n+4
+        }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.1.0.slim.min.js" integrity="sha256-cRpWjoSOw5KcyIOaZNo4i6fZ9tKPhYYb6i5T9RSVJG8=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://use.fontawesome.com/d843112862.js"></script>
+    <!-- https://github.com/addyosmani/timing.js -->
+    <script>(function(window){"use strict";window.timing=window.timing||{getTimes:function(opts){var performance=window.performance||window.webkitPerformance||window.msPerformance||window.mozPerformance;if(performance===undefined){return false}var timing=performance.timing;var api={};opts=opts||{};if(timing){if(opts&&!opts.simple){for(var k in timing){if(isNumeric(timing[k])){api[k]=parseFloat(timing[k])}}}if(api.firstPaint===undefined){var firstPaint=0;if(window.chrome&&window.chrome.loadTimes){firstPaint=window.chrome.loadTimes().firstPaintTime*1e3;api.firstPaintTime=firstPaint-window.chrome.loadTimes().startLoadTime*1e3}else if(typeof window.performance.timing.msFirstPaint==="number"){firstPaint=window.performance.timing.msFirstPaint;api.firstPaintTime=firstPaint-window.performance.timing.navigationStart}if(opts&&!opts.simple){api.firstPaint=firstPaint}}api.loadTime=timing.loadEventEnd-timing.fetchStart;api.domReadyTime=timing.domComplete-timing.domInteractive;api.readyStart=timing.fetchStart-timing.navigationStart;api.redirectTime=timing.redirectEnd-timing.redirectStart;api.appcacheTime=timing.domainLookupStart-timing.fetchStart;api.unloadEventTime=timing.unloadEventEnd-timing.unloadEventStart;api.lookupDomainTime=timing.domainLookupEnd-timing.domainLookupStart;api.connectTime=timing.connectEnd-timing.connectStart;api.requestTime=timing.responseEnd-timing.requestStart;api.initDomTreeTime=timing.domInteractive-timing.responseEnd;api.loadEventTime=timing.loadEventEnd-timing.loadEventStart}return api},printTable:function(opts){var table={};var data=this.getTimes(opts)||{};Object.keys(data).sort().forEach(function(k){table[k]={ms:data[k],s:+(data[k]/1e3).toFixed(2)}});console.table(table)},printSimpleTable:function(){this.printTable({simple:true})}};function isNumeric(n){return!isNaN(parseFloat(n))&&isFinite(n)}})(this);</script>
+    <script>
+        window.onload = function () {
+            var Pi=0;
+            var n=1;
+            for (i=0;i<=10000000;i++)
+            {
+                Pi=Pi+(4/n)-(4/(n+2))
+                n=n+4
+            }
+        };
+
+        window.addEventListener('load', function () {
+            setTimeout(function () {
+                var times = timing.getTimes();
+                var overall = {
+                    network: {
+                        label: 'Network',
+                        startEvent: 'navigationStart',
+                        endEvent: 'connectEnd',
+                    },
+                    server: {
+                        label: 'Server',
+                        startEvent: 'requestStart',
+                        endEvent: 'responseEnd',
+                    },
+                    browser: {
+                        label: 'Browser',
+                        startEvent: 'domLoading',
+                        endEvent: 'loadEventEnd',
+                    }
+                }
+
+                var networkBreakdown = {
+                    redirect: {
+                        label: 'Redirect',
+                        startEvent: 'redirectStart',
+                        endEvent: 'redirectEnd'
+                    },
+                    appCache: {
+                        label: 'App Cache',
+                        startEvent: 'fetchStart',
+                        endEvent: 'domainLookupStart'
+                    },
+                    dns: {
+                        label: 'DNS',
+                        startEvent: 'domainLookupStart',
+                        endEvent: 'domainLookupEnd'
+                    },
+                    tcp: {
+                        label: 'TCP',
+                        startEvent: 'connectStart',
+                        endEvent: 'connectEnd'
+                    },
+                }
+
+                var serverBreakdown = {
+                    request: {
+                        label: 'Request',
+                        startEvent: 'requestStart',
+                        endEvent: 'responseStart'
+                    },
+                    response: {
+                        label: 'Response',
+                        startEvent: 'responseStart',
+                        endEvent: 'responseEnd'
+                    },
+                }
+
+                var browserBreakdown = {
+                    processing: {
+                        label: 'Processing',
+                        startEvent: 'domLoading',
+                        endEvent: 'loadEventStart'
+                    },
+                    onLoad: {
+                        label: 'Load',
+                        startEvent: 'loadEventStart',
+                        endEvent: 'loadEventEnd'
+                    },
+                }
+
+                calc(overall);
+                calc(networkBreakdown, overall.network.percent);
+                calc(serverBreakdown, overall.server.percent);
+                calc(browserBreakdown, overall.browser.percent);
+
+                // todo pass in overall percentage here to get sub-percentages
+                function calc(segment, parentPercent) {
+                    for (var section in segment) {
+                        var startTime = times[segment[section].startEvent];
+                        var endTime = times[segment[section].endEvent];
+                        var duration = endTime - startTime;
+
+                        // testing only - this value is difficult to simulate
+                        var networkTestTime = Math.floor(Math.random() * (120 - 20 + 1)) + 20;
+                        if (section == 'network') {
+                            duration = networkTestTime;
+                            console.log('generating random duration for', section, duration);
+                        }
+                        if (['dns', 'tcp', 'appCache', 'redirect'].indexOf(section) > 0) {
+                            duration = Math.floor(Math.random() * (networkTestTime - 2 + 1)) + 2;
+                            console.log('generating random duration for', section, duration);
+                        }
+                        ////////
+
+                        segment[section].startTime = startTime;
+                        segment[section].endTime = endTime;
+                        segment[section].duration = duration;
+                    }
+
+                    function toPctFn(values) {
+                        var sum = 0;
+                        for(var i = 0; i != values.length; ++i ) {
+                            sum = sum + values[i];
+                        }
+                        var scale = 100/sum;
+
+                        return function(x) {
+                            return x * scale;
+                        };
+                    }
+
+                    function percentOfPercent(a, b){
+                        return (a/100 * b/100) * 100;
+                    }
+
+                    // Get all durations, to calculate percentages from
+                    var durations = [];
+                    for (var section in segment) {
+                        durations.push(segment[section].duration);
+                    }
+
+                    var toPct = toPctFn(durations);
+
+                    for (var section in segment) {
+                        if (parentPercent) {
+                            var percent = percentOfPercent(toPct(segment[section].duration), parentPercent);
+                        } else {
+                            var percent = toPct(segment[section].duration);
+                        }
+
+                        segment[section].percent = percent;
+
+                        var elements = document.getElementsByClassName('progress-'+section);
+                        [].forEach.call(elements, function (el) {
+                            el.style.width = percent+'%';
+                        });
+
+                        var label = segment[section].label+': '+segment[section].duration+'ms';
+                        var el = document.getElementById('label-'+section);
+                        if (el) {
+                            el.innerHTML = label;
+                        }
+
+                        // Only the target of each is an ID
+                        var el = document.getElementById('progress-'+section);
+
+                        // For breakdowns, apply the tooltip higher
+                        if (parentPercent) {
+                            el = el.parentElement;
+                        }
+
+                        el.title = label;
+
+                        // The only dip to jQuery is for Bootstrap tooltips
+                        $(el).tooltip({
+                            placement: 'bottom'
+                        });
+                    }
+                }
+            }, 0);
+        });
+
+        document.addEventListener('DOMContentLoaded', function(event) {
+            var prefix = 'judo';
+
+            if (getState() == 'open') {
+                var judo = document.getElementById(prefix);
+                judo.className += ' open';
+
+                document.body.className += ' ' + prefix + '-open';
+            } else {
+                document.body.className += ' ' + prefix + '-closed';
+            }
+
+            // A small timeout lets booting finish before applying the class
+            // Applying the class triggers css transitions, not nice on initial boot if shown
+            setTimeout(function () {
+                document.body.className += ' '+prefix+'-booted';
+            }, 0);
+
+            document.getElementById(prefix + '-toggle').onclick = function() {
+                var e = document.getElementById(prefix);
+                if (e.className.match(' open')) {
+                    e.className = e.className.replace(' open', '')
+                    setState('closed');
+                } else {
+                    e.className += ' open';
+                    setState('open');
+                }
+
+                if (document.body.className.match(' ' + prefix + '-open')) {
+                    document.body.className = document.body.className.replace(' ' + prefix + '-open', '')
+                } else {
+                    document.body.className += ' ' + prefix + '-open';
+                }
+            }
+
+            function setState(state) {
+                localStorage.setItem(prefix+'-state', state);
+            }
+
+            function getState()
+            {
+                return localStorage.getItem(prefix+'-state');
+            }
+        });
+    </script>
+</head>
+
+<body>
+
+<nav id="judo" class="judo navbar navbar-inverse navbar-fixed-top">
+    <div id="judo-toggle" class="judo-toggle"></div>
+
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+    </div>
+    <div id="navbar" class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <i class="fa fa-leaf"></i> Preview
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="dropdown-header">Staging</li>
+                    <li><a href="#">Default (selects [lb] randomly)</a></li>
+                    <li><a href="#">Kasparov (New Relic) <span class="pull-right">13</span></a></li>
+                    <li><a href="#">Holt (Blackfire) <span class="pull-right">42</span></a></li>
+                    <li><a href="#">Bhat <span class="pull-right">20</span></a></li>
+                    <li><a href="#">Krush <span class="pull-right">21</span></a></li>
+                    <li><a href="#">Morphy <span class="pull-right">22</span></a></li>
+                    <li><a href="#">Short <span class="pull-right">38</span></a></li>
+                    <li><a href="#">Ramirez <span class="pull-right">49</span></a></li>
+                    <li><a href="#">Melik <span class="pull-right">50</span></a></li>
+                    <li><a href="#">Varga <span class="pull-right">64</span></a></li>
+                    <li><a href="#">Visser <span class="pull-right">65</span></a></li>
+                    <li role="separator" class="divider"></li>
+                    <li class="dropdown-header">Preview</li>
+                    <li><a href="#"><strong>Capablanca <span class="pull-right">25</span></strong></a></li>
+                    <li><a href="#">betavm1 (debug) <span class="pull-right">55</span></a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    <i class="fa fa-code-fork"></i> develop
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">Release 20160726121703</a></li>
+                    <li><a href="#">Branch develop</a></li>
+                    <li><a href="#">Commit 3822e07</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li><a href="#">Environment: staging</a></li>
+                    <li><a href="#">Debug: on</a></li>
+                </ul>
+            </li>
+            <li class="timing">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                    <i class="fa fa-clock-o"></i>
+
+                    <div class="progress progress-bar-segmented pull-right">
+                        <div id="progress-network" class="progress-network progress-bar progress-bar-danger tooltip-default"></div>
+                        <div id="progress-server" class="progress-server progress-bar progress-bar-warning tooltip-default"></div>
+                        <div id="progress-browser" class="progress-browser progress-bar progress-bar-info tooltip-default"></div>
+                    </div>
+                </a>
+                <ul class="dropdown-menu" style="width: 100%">
+                    <li>
+                        <a href="https://www.w3.org/TR/navigation-timing/" target="_blank">Navigation Timing API</a>
+                    </li>
+                    <li role="separator" class="divider"></li>
+
+                    <li id="label-network" class="dropdown-header"></li>
+                    <li>
+                        <div class="progress progress-sm progress-bar-segmented">
+                            {#redirect, appCache, dns, tcp#}
+                            <div id="progress-redirect" class="progress-redirect progress-bar progress-bar-danger"></div>
+                            <div class="progress-appCache progress-bar progress-bar-danger progress-bar-translucent"></div>
+                            <div class="progress-dns progress-bar progress-bar-danger progress-bar-translucent"></div>
+                            <div class="progress-tcp progress-bar progress-bar-danger progress-bar-translucent"></div>
+
+                            <div class="progress-server progress-bar progress-bar-clear"></div>
+                            <div class="progress-browser progress-bar progress-bar-clear"></div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="progress progress-sm progress-bar-segmented">
+                            {#redirect, appCache, dns, tcp#}
+                            <div class="progress-redirect progress-bar progress-bar-danger progress-bar-translucent"></div>
+                            <div id="progress-appCache" class="progress-appCache progress-bar progress-bar-danger"></div>
+                            <div class="progress-dns progress-bar progress-bar-danger progress-bar-translucent"></div>
+                            <div class="progress-tcp progress-bar progress-bar-danger progress-bar-translucent"></div>
+
+                            <div class="progress-server progress-bar progress-bar-clear"></div>
+                            <div class="progress-browser progress-bar progress-bar-clear"></div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="progress progress-sm progress-bar-segmented">
+                            {#redirect, appCache, dns, tcp#}
+                            <div class="progress-redirect progress-bar progress-bar-danger progress-bar-translucent"></div>
+                            <div class="progress-appCache progress-bar progress-bar-danger progress-bar-translucent"></div>
+                            <div id="progress-dns" class="progress-dns progress-bar progress-bar-danger"></div>
+                            <div class="progress-tcp progress-bar progress-bar-danger progress-bar-translucent"></div>
+
+                            <div class="progress-server progress-bar progress-bar-clear"></div>
+                            <div class="progress-browser progress-bar progress-bar-clear"></div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="progress progress-sm progress-bar-segmented">
+                            {#redirect, appCache, dns, tcp#}
+                            <div class="progress-redirect progress-bar progress-bar-danger progress-bar-translucent"></div>
+                            <div class="progress-appCache progress-bar progress-bar-danger progress-bar-translucent"></div>
+                            <div class="progress-dns progress-bar progress-bar-danger progress-bar-translucent"></div>
+                            <div id="progress-tcp" class="progress-tcp progress-bar progress-bar-danger"></div>
+
+                            <div class="progress-server progress-bar progress-bar-clear"></div>
+                            <div class="progress-browser progress-bar progress-bar-clear"></div>
+                        </div>
+                    </li>
+                    <li role="separator" class="divider"></li>
+
+                    <li id="label-server" class="dropdown-header"></li>
+                    <li>
+                        <div class="progress progress-sm progress-bar-segmented">
+                            <div class="progress-network progress-bar progress-bar-clear"></div>
+
+                            <div id="progress-request" class="progress-request progress-bar progress-bar-warning"></div>
+                            <div class="progress-response progress-bar progress-bar-warning progress-bar-translucent"></div>
+
+                            <div class="progress-browser progress-bar progress-bar-clear"></div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="progress progress-sm progress-bar-segmented">
+                            <div class="progress-network progress-bar progress-bar-clear"></div>
+
+                            <div class="progress-request progress-bar progress-bar-warning progress-bar-translucent"></div>
+                            <div id="progress-response" class="progress-response progress-bar progress-bar-warning"></div>
+
+                            <div class="progress-browser progress-bar progress-bar-clear"></div>
+                        </div>
+                    </li>
+                    <li role="separator" class="divider"></li>
+
+                    <li id="label-browser" class="dropdown-header"></li>
+                    <li>
+                        <div class="progress progress-sm progress-bar-segmented">
+                            <div class="progress-network progress-bar progress-bar-clear"></div>
+                            <div class="progress-server progress-bar progress-bar-clear"></div>
+
+                            <div id="progress-processing" class="progress-processing progress-bar progress-bar-info"></div>
+                            <div class="progress-onLoad progress-bar progress-bar-info progress-bar-translucent"></div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="progress progress-sm progress-bar-segmented">
+                            <div class="progress-network progress-bar progress-bar-clear"></div>
+                            <div class="progress-server progress-bar progress-bar-clear"></div>
+
+                            <div class="progress-processing progress-bar progress-bar-info progress-bar-translucent"></div>
+                            <div id="progress-onLoad" class="progress-onLoad progress-bar progress-bar-info"></div>
+                        </div>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="header clearfix">
+        <nav>
+            <ul class="nav nav-pills pull-right">
+                <li role="presentation" class="active"><a href="#">Home</a></li>
+                <li role="presentation"><a href="#">About</a></li>
+                <li role="presentation"><a href="#">Contact</a></li>
+            </ul>
+        </nav>
+        <h3 class="text-muted">Project name</h3>
+    </div>
+
+    <img src="http://placehold.it/350x150?text={{ "now"|date("F jS \\a\\t g:ia") }}">
+
+    <div class="jumbotron">
+        <h1>Jumbotron heading</h1>
+        <p class="lead">Cras justo odio, dapibus ac facilisis in, egestas eget quam. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
+        <p><a class="btn btn-lg btn-success" href="#" role="button">Sign up today</a></p>
+    </div>
+
+    <div class="row marketing">
+        <div class="col-lg-6">
+            <h4>Subheading</h4>
+            <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
+
+            <h4>Subheading</h4>
+            <p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
+
+            <h4>Subheading</h4>
+            <p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
+        </div>
+
+        <div class="col-lg-6">
+            <h4>Subheading</h4>
+            <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
+
+            <h4>Subheading</h4>
+            <p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
+
+            <h4>Subheading</h4>
+            <p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
+        </div>
+    </div>
+
+    <div class="row marketing">
+        <div class="col-lg-6">
+            <h4>Subheading</h4>
+            <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
+
+            <h4>Subheading</h4>
+            <p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
+
+            <h4>Subheading</h4>
+            <p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
+        </div>
+
+        <div class="col-lg-6">
+            <h4>Subheading</h4>
+            <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
+
+            <h4>Subheading</h4>
+            <p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
+
+            <h4>Subheading</h4>
+            <p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
+        </div>
+    </div>
+
+    <div class="row marketing">
+        <div class="col-lg-6">
+            <h4>Subheading</h4>
+            <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
+
+            <h4>Subheading</h4>
+            <p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
+
+            <h4>Subheading</h4>
+            <p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
+        </div>
+
+        <div class="col-lg-6">
+            <h4>Subheading</h4>
+            <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
+
+            <h4>Subheading</h4>
+            <p>Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Cras mattis consectetur purus sit amet fermentum.</p>
+
+            <h4>Subheading</h4>
+            <p>Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>© 2016 Company, Inc.</p>
+    </footer>
+
+</div>
+
+</body>
+
+</html>
